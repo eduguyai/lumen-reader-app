@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumen — Canonical Texts, Illuminated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=Cormorant+Unicase:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --bone: #f5f1e8;
+    --gold: #c9a961;
+    --gold-bright: #f4d27a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #07060a; color: var(--bone);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  .view {
+    position: fixed; inset: 0;
+    opacity: 0; pointer-events: none;
+    transition: opacity 1s ease;
+    overflow: hidden;
+  }
+  .view.active { opacity: 1; pointer-events: auto; }
+
+  /* ────────── HOME ────────── */
+  #home {
+    background: radial-gradient(ellipse at 50% 0%, #1a1410 0%, #0a0708 60%, #060509 100%);
+    overflow-y: auto;
+  }
+  .stars { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+  .stars circle { fill: #f5f1e8; }
+  .home-inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1320px;
+    padding: 5vh 4vw 6vh; margin: 0 auto;
+  }
+  .brand-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8vh;
+  }
+  .brand {
+    font-family: 'Cinzel', serif; font-weight: 700;
+    letter-spacing: .42em; font-size: 1.15rem;
+    color: var(--gold-bright); text-transform: uppercase;
+  }
+  .brand-dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--gold-bright); border-radius: 50%;
+    margin: 0 .4em; transform: translateY(-3px);
+    box-shadow: 0 0 12px var(--gold-bright);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+  .nav-ghost {
+    color: #8a7d65; font-size: .8rem; letter-spacing: .25em;
+    text-transform: uppercase;
+  }
+  .hero { text-align: center; margin-bottom: 7vh; }
+  .greeting {
+    color: var(--gold); font-size: .85rem; letter-spacing: .35em;
+    text-transform: uppercase; margin-bottom: 2.2rem;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: clamp(2.4rem, 6vw, 5.2rem);
+    line-height: 1.02; margin-bottom: 1.4rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold-bright); font-weight: 400; }
+  .hero p {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    color: #c9bfac; max-width: 640px; margin: 0 auto;
+    line-height: 1.6;
+  }
+  .shelf-label {
+    display: flex; align-items: center; gap: 1.2rem;
+    color: #8a7d65; font-size: .72rem; letter-spacing: .4em;
+    text-transform: uppercase; margin-bottom: 2.4rem; margin-top: 7vh;
+  }
+  .shelf-label::before, .shelf-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, #3a3024, transparent);
+  }
+  .shelf-label.cc { color: #cf99a3; }
+  .shelf-label.cc::before, .shelf-label.cc::after {
+    background: linear-gradient(90deg, transparent, #4a2030, transparent);
+  }
+  .shelf-sub {
+    text-align: center; margin-top: -1.5rem; margin-bottom: 2.2rem;
+    font-family: 'EB Garamond', serif; font-style: italic;
+    color: #8a7d65; font-size: .92rem;
+  }
+
+  .shelf {
+    display: grid; gap: 2.2rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .shelf.cc { grid-template-columns: repeat(4, 1fr); gap: 1.6rem; }
+  @media (max-width: 1100px) {
+    .shelf.cc { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 800px) {
+    .shelf, .shelf.cc { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .shelf, .shelf.cc { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    position: relative;
+    aspect-ratio: 3 / 4.2;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #1a1410;
+    box-shadow:
+      0 30px 60px -30px rgba(0,0,0,.8),
+      0 1px 0 rgba(255,255,255,.04) inset;
+    transition: transform .8s cubic-bezier(.2,.7,.2,1), box-shadow .8s ease;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      0 50px 80px -30px rgba(0,0,0,.9),
+      0 0 0 1px rgba(201,169,97,.25) inset;
+  }
+  .card-art { position: absolute; inset: 0; }
+  .card-art svg { width: 100%; height: 100%; display: block; }
+  .card-meta {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 1.2rem 1.2rem 1.3rem;
+    background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.7) 60%, transparent 100%);
+  }
+  .card-meta .author {
+    font-size: .68rem; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: .4rem;
+  }
+  .card-meta h2 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 500;
+    font-size: 1.3rem; line-height: 1.12; margin-bottom: .4rem;
+  }
+  .card-meta .blurb {
+    font-family: 'EB Garamond', serif; font-style: italic;
+    font-size: .86rem; color: #c9bfac; line-height: 1.4;
+    margin-bottom: .8rem;
+  }
+  .card-cta {
+    font-size: .62rem; letter-spacing: .32em; text-transform: uppercase;
+    color: var(--gold-bright);
+    display: inline-flex; align-items: center; gap: .55rem;
+  }
+  .card-cta::after {
+    content: ''; width: 22px; height: 1px; background: currentColor;
+    transition: width .4s ease;
+  }
+  .card:hover .card-cta::after { width: 38px; }
+
+  /* Compact cards for Chicken's Corner shelf */
+  .shelf.cc .card-meta h2 { font-size: 1.1rem; }
+  .shelf.cc .card-meta { padding: 1rem 1rem 1.1rem; }
+  .shelf.cc .card-meta .blurb { display: none; }
+  .shelf.cc .card-meta .author { font-size: .62rem; }
+
+  .footer-note {
+    margin-top: 7vh; text-align: center;
+    color: #6b6151; font-size: .72rem; letter-spacing: .3em;
+    text-transform: uppercase;
+  }
+
+  /* ────────── READER ────────── */
+  #reader { display: flex; flex-direction: column; }
+  .reader-top {
+    position: relative; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2rem; gap: 1rem;
+    backdrop-filter: blur(8px);
+    background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0));
+  }
+  .back-btn, .voice-btn {
+    background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.18);
+    color: var(--bone); font: inherit;
+    padding: .55rem 1.05rem;
+    font-size: .7rem; letter-spacing: .28em; text-transform: uppercase;
+    cursor: pointer; border-radius: 999px;
+    transition: background .3s, border-color .3s;
+  }
+  .back-btn:hover, .voice-btn:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.35); }
+  .nav-row {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: .8rem;
+    flex-wrap: wrap;
+  }
+  #readerTitle {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1rem; letter-spacing: .04em; opacity: .9;
+    color: var(--gold-bright); white-space: nowrap;
+    max-width: 30vw; overflow: hidden; text-overflow: ellipsis;
+  }
+  .chapter-select {
+    background: rgba(0,0,0,.35); color: var(--bone);
+    border: 1px solid rgba(255,255,255,.18); border-radius: 999px;
+    padding: .5rem .95rem; font: inherit; font-size: .75rem;
+    letter-spacing: .12em; cursor: pointer; max-width: 50vw;
+  }
+  .chapter-select:focus { outline: none; border-color: var(--gold-bright); }
+
+  #stage { position: absolute; inset: 0; z-index: 1; }
+  #stage svg { width: 100%; height: 100%; display: block; }
+
+  #textCol {
+    position: absolute; z-index: 10;
+    left: 50%; top: 80px; bottom: 110px;
+    transform: translateX(-50%);
+    width: min(720px, 92vw);
+    overflow-y: auto;
+    padding: 2rem 1rem 3rem;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 30px, #000 calc(100% - 60px), transparent 100%);
+            mask-image: linear-gradient(180deg, transparent 0, #000 30px, #000 calc(100% - 60px), transparent 100%);
+    scrollbar-width: thin;
+  }
+  #textCol::-webkit-scrollbar { width: 5px; }
+  #textCol::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 4px; }
+  .text-chapter-title {
+    font-family: 'Cinzel', serif;
+    font-size: .85rem; letter-spacing: .42em;
+    text-align: center;
+    color: var(--gold-bright);
+    margin-bottom: 2.4rem; text-transform: uppercase;
+  }
+  .text-chapter-title::before, .text-chapter-title::after {
+    content: '·'; margin: 0 .8em; opacity: .6;
+  }
+  .text-body p {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(1.08rem, 1.3vw, 1.22rem);
+    line-height: 1.78; margin-bottom: 1.2em;
+    color: #f5ecd6;
+    text-shadow: 0 2px 14px rgba(0,0,0,.55);
+    cursor: pointer; transition: color .3s;
+  }
+  .text-body p:hover { color: var(--gold-bright); }
+  .text-body p.active {
+    color: var(--gold-bright);
+    text-shadow: 0 0 18px rgba(244,210,122,.35), 0 2px 14px rgba(0,0,0,.55);
+  }
+  .text-body .verse-num {
+    font-family: 'Cinzel', serif; font-size: .65em;
+    color: var(--gold); margin-right: .35em;
+    vertical-align: super; letter-spacing: .04em;
+  }
+  .text-body .drop {
+    font-family: 'Cinzel', serif; font-size: 3.2em;
+    line-height: .85; color: var(--gold-bright);
+    float: left; padding: .08em .12em 0 0;
+  }
+  /* book mode-specific tweaks via data-mode attr on #reader */
+  #reader[data-mode="bible"] .text-body p { font-family: 'IM Fell English', 'EB Garamond', serif; }
+
+  .controls {
+    position: absolute; z-index: 25;
+    left: 50%; bottom: 2.4vh;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 1rem;
+    background: rgba(8,7,5,.7);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 999px;
+    padding: .55rem .8rem;
+    max-width: 92vw;
+  }
+  .ctrl {
+    background: none; border: none; color: var(--bone);
+    cursor: pointer; padding: .4rem .65rem;
+    font-size: .72rem; letter-spacing: .24em; text-transform: uppercase;
+    font-family: inherit;
+    opacity: .85; transition: opacity .25s;
+    white-space: nowrap;
+  }
+  .ctrl:hover { opacity: 1; }
+  .ctrl.play {
+    background: var(--gold-bright); color: #1a1410;
+    border-radius: 999px; padding: .55rem 1.1rem; font-weight: 600;
+  }
+  .ctrl.play[data-state="playing"] { background: var(--bone); }
+
+  .speed-control {
+    display: flex; align-items: center;
+    gap: .3rem;
+    padding: 0 .35rem 0 .6rem;
+    border-left: 1px solid rgba(255,255,255,.12);
+    margin-left: .25rem;
+  }
+  .speed-step {
+    background: none; border: 1px solid rgba(255,255,255,.18);
+    color: var(--bone); cursor: pointer;
+    width: 26px; height: 26px;
+    border-radius: 999px;
+    font: inherit; font-size: 1rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .25s, border-color .25s;
+  }
+  .speed-step:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.35); }
+  .speed-display {
+    font-family: 'Cinzel', serif;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    color: var(--gold-bright);
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .voice-test {
+    background: none; border: 1px solid rgba(201,169,97,.4);
+    color: var(--gold-bright); font: inherit;
+    padding: .4rem .75rem;
+    font-size: .68rem; letter-spacing: .26em; text-transform: uppercase;
+    cursor: pointer; border-radius: 999px;
+    margin-top: .5rem; align-self: flex-start;
+    transition: background .25s, color .25s;
+  }
+  .voice-test:hover { background: var(--gold-bright); color: #1a1410; }
+
+  /* ────────── VOICE PANEL ────────── */
+  .voice-panel {
+    position: fixed; inset: 0; z-index: 40;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(4,3,2,.75); backdrop-filter: blur(8px);
+  }
+  .voice-panel.open { display: flex; }
+  .voice-card {
+    width: min(640px, 92vw); background: #14110d;
+    border: 1px solid rgba(201,169,97,.25); border-radius: 8px;
+    padding: 2rem 2rem 1.6rem;
+    box-shadow: 0 50px 120px rgba(0,0,0,.7);
+    max-height: 92vh; overflow-y: auto;
+  }
+  .voice-card h3 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 500;
+    font-size: 1.6rem; margin-bottom: .25rem; color: var(--gold-bright);
+  }
+  .voice-card .sub {
+    font-family: 'EB Garamond', serif; font-size: .95rem;
+    color: #c9bfac; margin-bottom: 1.3rem; line-height: 1.5; font-style: italic;
+  }
+  .voice-row { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1.1rem; }
+  .voice-row label {
+    font-size: .68rem; letter-spacing: .26em; text-transform: uppercase; color: var(--gold);
+  }
+  .voice-row select, .voice-row input {
+    background: #0a0807; color: var(--bone);
+    border: 1px solid rgba(201,169,97,.25); border-radius: 4px;
+    padding: .6rem .75rem; font: inherit; font-size: .9rem;
+    font-family: 'EB Garamond', serif;
+  }
+  .voice-row select:focus, .voice-row input:focus { outline: none; border-color: var(--gold-bright); }
+  .voice-row .hint {
+    font-size: .78rem; color: #8a7d65;
+    font-family: 'EB Garamond', serif; font-style: italic; margin-top: .15rem;
+  }
+  .voice-actions {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 1.4rem; padding-top: 1.2rem;
+    border-top: 1px solid rgba(201,169,97,.12);
+  }
+  .voice-actions button {
+    background: none; border: none; color: var(--bone);
+    cursor: pointer; padding: .6rem 1.1rem;
+    font-size: .7rem; letter-spacing: .26em; text-transform: uppercase;
+    font-family: inherit;
+  }
+  .voice-actions .primary {
+    background: var(--gold-bright); color: #1a1410;
+    border-radius: 999px; font-weight: 600;
+  }
+  .voice-card .note {
+    font-family: 'EB Garamond', serif; font-size: .82rem;
+    color: #8a7d65; line-height: 1.55;
+    background: rgba(184,54,45,.06);
+    border-left: 2px solid #b8362d;
+    padding: .8rem 1rem; margin-top: 1.2rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .voice-card .note strong { color: #c9bfac; }
+
+  /* ────────── LOADING ────────── */
+  #loading {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: #07060a;
+    transition: opacity 1s ease;
+  }
+  #loading.gone { opacity: 0; pointer-events: none; }
+  #loading .glyph {
+    font-family: 'Cinzel', serif; font-size: 2rem;
+    letter-spacing: .5em; color: var(--gold-bright);
+  }
+  #loading .sub {
+    margin-top: .6rem; font-family: 'EB Garamond', serif;
+    color: #8a7d65; font-size: .85rem; font-style: italic; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ────── LOADING ────── -->
+<div id="loading">
+  <div style="text-align:center">
+    <div class="glyph">LUMEN</div>
+    <div class="sub" id="loadingMsg">Gathering the texts…</div>
+  </div>
+</div>
+
+<!-- ────────────── HOME ────────────── -->
+<section id="home" class="view">
+  <svg class="stars" id="starfield" preserveAspectRatio="none"></svg>
+
+  <div class="home-inner">
+    <div class="brand-row">
+      <div class="brand">L<span class="brand-dot"></span>U M E N</div>
+      <div class="nav-ghost">A Library Reimagined · 2026</div>
+    </div>
+
+    <div class="hero">
+      <div class="greeting">Welcome, Kyonne</div>
+      <h1>The canon, <em>illuminated</em>.</h1>
+      <p>Lumen turns the great books into immersive, narrated worlds. Each chapter is a moving scene. The voices read with you.</p>
+    </div>
+
+    <div class="shelf-label">Volume I · The Canon</div>
+    <div class="shelf" id="canonShelf"></div>
+
+    <div class="shelf-label cc">Chicken's Corner · Sci-Fi Romance, Award-Winning</div>
+    <div class="shelf-sub">The pre-<em>Twilight</em> genealogy of dangerous love and deathless longing.</div>
+    <div class="shelf cc" id="chickenShelf"></div>
+
+    <div class="footer-note">All texts in the public domain · Narrated by your browser</div>
+  </div>
+</section>
+
+
+<!-- ────────────── READER ────────────── -->
+<section id="reader" class="view" data-mode="">
+  <div class="reader-top">
+    <button class="back-btn" data-back>← Library</button>
+    <div class="nav-row">
+      <div id="readerTitle">Title</div>
+      <select class="chapter-select" id="bookSelect" style="display:none"></select>
+      <select class="chapter-select" id="chapterSelect"></select>
+    </div>
+    <button class="voice-btn" data-voice-open>Voice ▾</button>
+  </div>
+
+  <div id="stage"></div>
+  <div id="textCol"></div>
+
+  <div class="controls">
+    <button class="ctrl" id="prevBtn">◀ Prev</button>
+    <button class="ctrl play" id="playBtn" data-state="idle">Begin Narration</button>
+    <button class="ctrl" id="nextBtn">Next ▶</button>
+    <div class="speed-control" title="Reading speed (multiplier on this book's base rate)">
+      <button class="speed-step" id="speedDown" aria-label="Slower">−</button>
+      <div class="speed-display" id="speedDisplay">1.00×</div>
+      <button class="speed-step" id="speedUp" aria-label="Faster">+</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────── VOICE PANEL ────────────── -->
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-card">
+    <h3>Choose a narrator</h3>
+    <div class="sub">Pick a system voice, or paste a recorded narration URL (LibriVox, archive.org, your own MP3) to replace the synthetic reader entirely.</div>
+
+    <div class="voice-row">
+      <label>System Voice</label>
+      <select id="voiceSelect"></select>
+      <button class="voice-test" id="voiceTest" type="button">▶ Test this voice</button>
+      <div class="hint">Look for voices marked "Premium," "Enhanced," or "Neural" — they sound noticeably less robotic. Leave on Auto to let Lumen pick a voice that matches each book (British for the gothic works, American for Douglass and Sinclair, female where the narrator is a young woman).</div>
+    </div>
+
+    <div class="voice-row">
+      <label>Recorded Narration URL (optional)</label>
+      <input id="audioUrl" type="url" placeholder="https://archive.org/.../narration.mp3" />
+      <div class="hint">If set, Lumen plays this audio instead of synthesizing. Use a LibriVox or archive.org link.</div>
+    </div>
+
+    <div class="voice-row">
+      <label>Default Speed</label>
+      <select id="rateSelect">
+        <option value="0.6">0.60× — Contemplative</option>
+        <option value="0.75">0.75× — Unhurried</option>
+        <option value="0.85">0.85× — Measured</option>
+        <option value="1.0" selected>1.00× — Natural for each book</option>
+        <option value="1.15">1.15× — Lively</option>
+        <option value="1.35">1.35× — Brisk</option>
+        <option value="1.6">1.60× — Quick study</option>
+        <option value="2.0">2.00× — Skim</option>
+      </select>
+      <div class="hint">Each book has its own tuned base rate; this multiplies it. You can also adjust on the fly with the − / + buttons in the reader.</div>
+    </div>
+
+    <div class="note">
+      <strong>A note on voices.</strong> The mainstream open-source TTS engines (Piper, Coqui, MeloTTS) don't currently ship voice models specifically modeled on Black American speech — a real gap. The strongest open-source path is voice cloning (Coqui XTTS-v2, OpenVoice, F5-TTS), which can clone any narrator from a short sample but needs a small backend with a GPU. For canonical texts, the best near-term answer is licensing real human recordings — many already exist in the public domain on LibriVox and archive.org. Paste one above and Lumen will use it.
+    </div>
+
+    <div class="voice-actions">
+      <button data-voice-close>Cancel</button>
+      <button class="primary" id="voiceSave">Save</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   LUMEN — book registry + data-driven reader
+   ════════════════════════════════════════════════════════════ */
+
+const BOOKS = {
+  /* ───── Volume I: The Canon ───── */
+  bible: {
+    title: 'The Holy Bible',
+    author: 'King James Version',
+    year: 1611,
+    blurb: 'Sixty-six books, Genesis to Revelation, illuminated and read aloud.',
+    cta: 'Enter the scriptorium',
+    dataKey: 'KJV',
+    dataFile: 'texts/kjv.js',
+    mode: 'bible',
+    shelf: 'canon',
+  },
+  douglass: {
+    title: 'Narrative of Frederick Douglass',
+    fullTitle: 'Narrative of the Life of Frederick Douglass, an American Slave',
+    author: 'Frederick Douglass',
+    year: 1845,
+    blurb: 'Written by himself. The whole arc — Tuckahoe to the New Bedford pier.',
+    cta: 'Open the narrative',
+    dataKey: 'DOUGLASS',
+    dataFile: 'texts/douglass.js',
+    mode: 'simple',
+    shelf: 'canon',
+  },
+  jungle: {
+    title: 'The Jungle',
+    author: 'Upton Sinclair',
+    year: 1906,
+    blurb: 'Packingtown in full — the book that shook a nation\'s stomach.',
+    cta: 'Walk into Packingtown',
+    dataKey: 'JUNGLE',
+    dataFile: 'texts/jungle.js',
+    mode: 'simple',
+    shelf: 'canon',
+  },
+
+  /* ───── Chicken's Corner: Pre-Twilight Sci-Fi Romance ───── */
+  dracula: {
+    title: 'Dracula',
+    author: 'Bram Stoker',
+    year: 1897,
+    blurb: 'The vampire archetype, in letters and journals.',
+    cta: 'Cross the Borgo Pass',
+    dataKey: 'DRACULA',
+    dataFile: 'texts/dracula.js',
+    mode: 'simple',
+    shelf: 'chicken',
+  },
+  carmilla: {
+    title: 'Carmilla',
+    author: 'Joseph Sheridan Le Fanu',
+    year: 1872,
+    blurb: 'The vampire before Dracula. Slow, languid, devastating.',
+    cta: 'Meet your strange guest',
+    dataKey: 'CARMILLA',
+    dataFile: 'texts/carmilla.js',
+    mode: 'simple',
+    shelf: 'chicken',
+  },
+  frankenstein: {
+    title: 'Frankenstein',
+    fullTitle: 'Frankenstein; or, the Modern Prometheus',
+    author: 'Mary Shelley',
+    year: 1818,
+    blurb: 'A creator, a creature, and the loneliest love story ever assembled.',
+    cta: 'Climb to the laboratory',
+    dataKey: 'FRANKENSTEIN',
+    dataFile: 'texts/frankenstein.js',
+    mode: 'simple',
+    shelf: 'chicken',
+  },
+  jane_eyre: {
+    title: 'Jane Eyre',
+    author: 'Charlotte Brontë',
+    year: 1847,
+    blurb: 'Thornfield, the secret upstairs, and a love that refuses to bow.',
+    cta: 'Cross the moor to Thornfield',
+    dataKey: 'JANE_EYRE',
+    dataFile: 'texts/jane_eyre.js',
+    mode: 'simple',
+    shelf: 'chicken',
+  },
+  wuthering: {
+    title: 'Wuthering Heights',
+    author: 'Emily Brontë',
+    year: 1847,
+    blurb: 'Heathcliff and Catherine — possession passing for love.',
+    cta: 'Walk out onto the moor',
+    dataKey: 'WUTHERING',
+    dataFile: 'texts/wuthering.js',
+    mode: 'simple',
+    shelf: 'chicken',
+  },
+  phantom: {
+    title: 'The Phantom of the Opera',
+    author: 'Gaston Leroux',
+    year: 1910,
+    blurb: 'A masked teacher, a soprano, the chandelier above.',
+    cta: 'Enter Box Five',
+    dataKey: 'PHANTOM',
+    dataFile: 'texts/phantom.js',
+    mode: 'simple',
+    shelf: 'chicken',
+  },
+  princess_mars: {
+    title: 'A Princess of Mars',
+    author: 'Edgar Rice Burroughs',
+    year: 1912,
+    blurb: 'John Carter, Dejah Thoris — pulp sci-fi romance, in full.',
+    cta: 'Step onto Barsoom',
+    dataKey: 'PRINCESS_MARS',
+    dataFile: 'texts/princess_mars.js',
+    mode: 'simple',
+    shelf: 'chicken',
+  },
+};
+
+/* ────────── Per-book voice preferences ──────────
+   Each book gets a target accent (en-GB for British/European works,
+   en-US for American works), a gender hint where it serves the narrator's
+   voice, a `preferred` list of voice-name fragments that score the highest,
+   and base pitch/rate values tuned to the mood of the book. */
+const VOICE_PREFS = {
+  bible:         { lang: 'en-GB', gender: 'm', preferred: ['Daniel', 'Oliver', 'Arthur', 'Reed', 'Google UK English Male'],
+                   pitch: 0.82, rate: 0.80,  // deep, deliberate
+                   sentenceGapBoost: 1.4 },
+  douglass:      { lang: 'en-US', gender: 'm', preferred: ['Aaron', 'Eddy', 'Tom', 'Matthew', 'Evan', 'Reed'],
+                   pitch: 0.88, rate: 0.86 }, // warm, measured
+  jungle:        { lang: 'en-US', gender: 'm', preferred: ['Tom', 'Aaron', 'Eddy', 'Matthew'],
+                   pitch: 0.94, rate: 0.90 }, // brisk reportage
+  dracula:       { lang: 'en-GB', gender: 'm', preferred: ['Daniel', 'Oliver', 'Arthur', 'Daniel (Premium)', 'Google UK English Male'],
+                   pitch: 0.84, rate: 0.84,
+                   sentenceGapBoost: 1.25 },  // gothic British male
+  carmilla:      { lang: 'en-GB', gender: 'f', preferred: ['Kate', 'Serena', 'Stephanie', 'Hazel', 'Tessa', 'Susan', 'Google UK English Female'],
+                   pitch: 1.00, rate: 0.84 }, // intimate young woman
+  frankenstein:  { lang: 'en-GB', gender: 'f', preferred: ['Kate', 'Stephanie', 'Serena', 'Hazel', 'Tessa'],
+                   pitch: 0.96, rate: 0.84 }, // Shelley's measured cadence
+  jane_eyre:     { lang: 'en-GB', gender: 'f', preferred: ['Kate', 'Serena', 'Stephanie', 'Hazel', 'Moira', 'Tessa'],
+                   pitch: 1.02, rate: 0.88 }, // Jane's first-person voice
+  wuthering:     { lang: 'en-GB', gender: 'f', preferred: ['Kate', 'Stephanie', 'Serena', 'Moira'],
+                   pitch: 0.96, rate: 0.86 }, // Nelly Dean's Yorkshire steadiness
+  phantom:       { lang: 'en-GB', gender: 'm', preferred: ['Daniel', 'Oliver', 'Arthur'],
+                   pitch: 0.94, rate: 0.90 }, // theatrical British
+  princess_mars: { lang: 'en-US', gender: 'm', preferred: ['Tom', 'Aaron', 'Eddy', 'Matthew', 'Fred'],
+                   pitch: 0.92, rate: 0.94 }, // pulp adventure pace
+};
+
+/* Gender hints for common voice names across macOS / Windows / Google.
+   Used to bias auto-selection. Lowercase keys. */
+const VOICE_GENDERS = {
+  // macOS male
+  alex:'m', aaron:'m', albert:'m', arthur:'m', bahh:'m', bruce:'m', daniel:'m', diego:'m', eddy:'m',
+  evan:'m', fred:'m', jorge:'m', juan:'m', lee:'m', luca:'m', oliver:'m', otoya:'m', paulina:'m',
+  ralph:'m', reed:'m', rishi:'m', tom:'m', xander:'m', yuri:'m', tom_premium:'m',
+  // macOS female
+  ava:'f', alice:'f', allison:'f', amelie:'f', anna:'f', carmit:'f', damayanti:'f', ellen:'f',
+  fiona:'f', flo:'f', grandma:'f', hattori:'f', hazel:'f', ioana:'f', joana:'f', kanya:'f',
+  karen:'f', kate:'f', kyoko:'f', laila:'f', lana:'f', lekha:'f', linda:'f', luciana:'f',
+  mariska:'f', mei_jia:'f', melina:'f', milena:'f', moira:'f', monica:'f', nora:'f',
+  paulina_f:'f', princess:'f', rocko:'f', samantha:'f', sandy:'f', sara:'f', satu:'f',
+  serena:'f', sin_ji:'f', stephanie:'f', susan:'f', tessa:'f', tingting:'f', trinoids:'f',
+  veena:'f', vicki:'f', victoria:'f', xiaoyou:'f', yuna:'f', zarvox:'f', zosia:'f', zuzana:'f',
+  // Microsoft
+  david:'m', mark:'m', james:'m', george:'m', richard:'m', sean:'m', guy:'m', andrew:'m',
+  zira:'f', mary:'f', hazel_ms:'f', heera:'f', huihui:'f', susan_ms:'f', catherine:'f',
+  hortense:'f', linda_ms:'f', aria:'f', jenny:'f', emma:'f', michelle:'f',
+  // Google
+  google_uk_english_male:'m', google_uk_english_female:'f',
+  google_us_english:'f',  // default Google US is typically female
+};
+
+function detectGender(voice) {
+  const n = (voice.name || '').toLowerCase();
+  // explicit "(male)" / "(female)" tags in some voices
+  if (/\bfemale\b/.test(n)) return 'f';
+  if (/\bmale\b/.test(n)) return 'm';
+  // try common name part
+  for (const key of Object.keys(VOICE_GENDERS)) {
+    if (n.includes(key.replace('_', ' ')) || n.includes(key)) {
+      return VOICE_GENDERS[key];
+    }
+  }
+  return null;
+}
+
+/* ────────── Card cover art (small, for the home shelf) ────────── */
+const CARD_ART = {
+  bible: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="parchG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a2818"/><stop offset="50%" stop-color="#5c3d20"/><stop offset="100%" stop-color="#2a1a0c"/>
+      </linearGradient>
+      <radialGradient id="haloG" cx=".5" cy=".4" r=".7">
+        <stop offset="0%" stop-color="#f4d27a" stop-opacity=".55"/><stop offset="60%" stop-color="#c9a961" stop-opacity=".15"/><stop offset="100%" stop-color="#000" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#parchG)"/>
+    <rect width="300" height="420" fill="url(#haloG)"/>
+    <rect x="18" y="20" width="264" height="380" fill="none" stroke="#c9a961" opacity=".5"/>
+    <g transform="translate(150 180)">
+      <rect x="-44" y="-58" width="88" height="116" fill="#7c1a1a" opacity=".85"/>
+      <rect x="-44" y="-58" width="88" height="116" fill="none" stroke="#f4d27a" stroke-width="1.5"/>
+      <text x="0" y="22" text-anchor="middle" font-family="Cinzel" font-size="92" fill="#f4d27a" font-weight="700">I</text>
+    </g>
+  </svg>`,
+
+  douglass: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="dawnG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1f3a5c"/><stop offset="45%" stop-color="#b87a4a"/>
+        <stop offset="70%" stop-color="#e6b58a"/><stop offset="100%" stop-color="#5c3d20"/>
+      </linearGradient>
+      <radialGradient id="dawnSun" cx=".5" cy=".62" r=".24"><stop offset="0%" stop-color="#fdebc6"/><stop offset="100%" stop-color="#e6b58a" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#dawnG)"/>
+    <circle cx="150" cy="260" r="80" fill="url(#dawnSun)"/>
+    <circle cx="150" cy="260" r="22" fill="#fff5d6" opacity=".9"/>
+    <rect y="270" width="300" height="150" fill="#1a2a3a" opacity=".7"/>
+    <g fill="#fdebc6" opacity=".4">
+      <rect x="146" y="280" width="8" height="2"/><rect x="142" y="295" width="16" height="2"/>
+      <rect x="138" y="310" width="24" height="2"/><rect x="142" y="325" width="16" height="2"/>
+    </g>
+    <g transform="translate(80 260)" fill="#0a0604">
+      <path d="M -22 0 L 22 0 L 18 8 L -18 8 Z"/>
+      <rect x="-12" y="-40" width="1.6" height="40"/><rect x="0" y="-50" width="1.6" height="50"/><rect x="12" y="-42" width="1.6" height="42"/>
+      <path d="M -12 -38 L -2 -38 L -2 -8 L -12 -8 Z" fill="#f0e0c0" opacity=".88"/>
+      <path d="M 1 -48 L 11 -48 L 11 -10 L 1 -10 Z" fill="#f0e0c0" opacity=".88"/>
+      <path d="M 13 -40 L 22 -40 L 22 -8 L 13 -8 Z" fill="#f0e0c0" opacity=".88"/>
+    </g>
+    <g transform="translate(150 380)" stroke="#1a0f08" stroke-width="3" fill="none">
+      <ellipse cx="-50" cy="0" rx="14" ry="9"/><ellipse cx="-26" cy="0" rx="14" ry="9"/>
+      <ellipse cx="0" cy="-3" rx="14" ry="9" opacity=".7"/>
+      <ellipse cx="34" cy="3" rx="14" ry="9"/><ellipse cx="58" cy="0" rx="14" ry="9"/>
+    </g>
+  </svg>`,
+
+  jungle: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="smkG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a2818"/><stop offset="55%" stop-color="#7a4a2a"/><stop offset="100%" stop-color="#1a0f08"/>
+      </linearGradient>
+      <radialGradient id="emberG" cx=".5" cy=".5" r=".5">
+        <stop offset="0%" stop-color="#d96d2c"/><stop offset="100%" stop-color="#5c1d0a" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#smkG)"/>
+    <g opacity=".55"><ellipse cx="60" cy="160" rx="35" ry="60" fill="#1a1714"/><ellipse cx="100" cy="120" rx="40" ry="70" fill="#1a1714"/>
+    <ellipse cx="160" cy="100" rx="50" ry="80" fill="#1a1714"/><ellipse cx="220" cy="140" rx="38" ry="60" fill="#1a1714"/><ellipse cx="260" cy="170" rx="32" ry="50" fill="#1a1714"/></g>
+    <ellipse cx="170" cy="280" rx="120" ry="40" fill="url(#emberG)" opacity=".5"/>
+    <g fill="#0a0604">
+      <rect x="40" y="270" width="220" height="80"/>
+      <rect x="60" y="220" width="14" height="50"/><rect x="90" y="200" width="14" height="70"/>
+      <rect x="140" y="180" width="18" height="90"/><rect x="190" y="210" width="14" height="60"/><rect x="230" y="225" width="14" height="45"/>
+      <g fill="#d96d2c" opacity=".75">
+        <rect x="55" y="290" width="6" height="8"/><rect x="70" y="290" width="6" height="8"/><rect x="85" y="290" width="6" height="8"/><rect x="100" y="290" width="6" height="8"/><rect x="115" y="290" width="6" height="8"/>
+        <rect x="55" y="310" width="6" height="8"/><rect x="100" y="310" width="6" height="8"/><rect x="200" y="295" width="6" height="8"/><rect x="230" y="295" width="6" height="8"/>
+      </g>
+    </g>
+    <rect y="350" width="300" height="70" fill="#0a0604"/>
+  </svg>`,
+
+  dracula: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="drcSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0a0a1a"/><stop offset="55%" stop-color="#1a1428"/><stop offset="100%" stop-color="#0a0608"/>
+      </linearGradient>
+      <radialGradient id="drcMoon" cx=".5" cy=".5" r=".5">
+        <stop offset="0%" stop-color="#fff5d6" stop-opacity=".4"/><stop offset="100%" stop-color="#fff5d6" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#drcSky)"/>
+    <circle cx="220" cy="100" r="80" fill="url(#drcMoon)"/>
+    <circle cx="220" cy="100" r="36" fill="#f4ecd0"/>
+    <circle cx="208" cy="92" r="32" fill="#1a1428" opacity=".3"/>
+    <!-- bats -->
+    <g fill="#0a0608">
+      <path d="M 60 130 q 6 -6 12 0 q -6 4 -12 0 z"/>
+      <path d="M 90 95 q 5 -5 10 0 q -5 3 -10 0 z"/>
+      <path d="M 140 160 q 4 -4 8 0 q -4 3 -8 0 z"/>
+      <path d="M 50 180 q 5 -5 10 0 q -5 4 -10 0 z"/>
+    </g>
+    <!-- castle silhouette -->
+    <g fill="#0a0608">
+      <rect x="80" y="200" width="160" height="160"/>
+      <rect x="60" y="240" width="40" height="120"/>
+      <rect x="220" y="240" width="40" height="120"/>
+      <polygon points="140,180 180,180 180,200 140,200"/>
+      <polygon points="60,240 80,210 100,240"/>
+      <polygon points="220,240 240,210 260,240"/>
+      <polygon points="80,200 120,160 160,200"/>
+      <polygon points="160,200 200,160 240,200"/>
+      <!-- windows lit by candle -->
+      <g fill="#b8362d" opacity=".75">
+        <rect x="110" y="240" width="6" height="14"/>
+        <rect x="150" y="240" width="6" height="14"/>
+        <rect x="195" y="240" width="6" height="14"/>
+        <rect x="130" y="280" width="6" height="14"/>
+        <rect x="170" y="280" width="6" height="14"/>
+      </g>
+    </g>
+    <!-- mist on ground -->
+    <ellipse cx="150" cy="370" rx="180" ry="20" fill="#1a1428" opacity=".7"/>
+    <ellipse cx="150" cy="395" rx="200" ry="30" fill="#0a0608"/>
+  </svg>`,
+
+  carmilla: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="carmBg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1c1830"/><stop offset="100%" stop-color="#0a0814"/>
+      </linearGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#carmBg)"/>
+    <!-- arched window/portrait frame -->
+    <path d="M 90 110 Q 90 50 150 50 Q 210 50 210 110 L 210 290 L 90 290 Z" fill="#1a1430" stroke="#c98aa3" stroke-width="2" opacity=".8"/>
+    <!-- pale figure silhouette -->
+    <g transform="translate(150 220)">
+      <ellipse cx="0" cy="-30" rx="22" ry="28" fill="#e8d8d8" opacity=".7"/>
+      <path d="M -38 70 Q -42 0 -28 -10 L 28 -10 Q 42 0 38 70 Z" fill="#e8d8d8" opacity=".55"/>
+      <!-- hair -->
+      <path d="M -22 -42 Q -28 -56 -8 -54 L 8 -54 Q 28 -56 22 -42 L 24 -10 L -24 -10 Z" fill="#3a1428" opacity=".85"/>
+      <!-- closed eyes hint -->
+      <line x1="-9" y1="-32" x2="-3" y2="-32" stroke="#1a0814" stroke-width="1.2"/>
+      <line x1="3" y1="-32" x2="9" y2="-32" stroke="#1a0814" stroke-width="1.2"/>
+      <!-- lip -->
+      <path d="M -4 -22 Q 0 -19 4 -22" fill="none" stroke="#7c1a3a" stroke-width="1.4"/>
+    </g>
+    <!-- candle -->
+    <g transform="translate(60 360)">
+      <rect x="-3" y="0" width="6" height="40" fill="#e8d8d8"/>
+      <path d="M -2 -2 Q 0 -14 2 -2 Z" fill="#f4d27a"/>
+      <circle cx="0" cy="-6" r="10" fill="#f4d27a" opacity=".22"/>
+    </g>
+    <g transform="translate(240 360)">
+      <rect x="-3" y="0" width="6" height="40" fill="#e8d8d8"/>
+      <path d="M -2 -2 Q 0 -14 2 -2 Z" fill="#f4d27a"/>
+      <circle cx="0" cy="-6" r="10" fill="#f4d27a" opacity=".22"/>
+    </g>
+  </svg>`,
+
+  frankenstein: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="frnSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0a0a14"/><stop offset="55%" stop-color="#1c2030"/><stop offset="100%" stop-color="#0a0a12"/>
+      </linearGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#frnSky)"/>
+    <!-- lightning -->
+    <path d="M 200 30 L 180 110 L 200 110 L 170 220 L 200 200 L 160 340" fill="none" stroke="#aee0ff" stroke-width="2" opacity=".9"/>
+    <path d="M 200 30 L 180 110 L 200 110 L 170 220 L 200 200 L 160 340" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/>
+    <!-- clouds -->
+    <ellipse cx="80" cy="120" rx="70" ry="22" fill="#1a1828" opacity=".7"/>
+    <ellipse cx="220" cy="140" rx="60" ry="20" fill="#1a1828" opacity=".7"/>
+    <!-- alps silhouette -->
+    <polygon points="0,300 40,240 80,290 130,220 170,290 220,210 270,290 300,260 300,420 0,420" fill="#0a0608"/>
+    <!-- snow line -->
+    <g fill="#aee0ff" opacity=".4">
+      <polygon points="120,225 130,220 140,235"/>
+      <polygon points="210,215 220,210 230,225"/>
+    </g>
+    <!-- creature silhouette -->
+    <g transform="translate(150 360)" fill="#0a0608">
+      <rect x="-3" y="-50" width="6" height="48"/>
+      <circle cx="0" cy="-55" r="6"/>
+      <line x1="-3" y1="-32" x2="-12" y2="-15" stroke="#0a0608" stroke-width="3"/>
+      <line x1="3" y1="-32" x2="12" y2="-15" stroke="#0a0608" stroke-width="3"/>
+      <line x1="-2" y1="-2" x2="-6" y2="14" stroke="#0a0608" stroke-width="3"/>
+      <line x1="2" y1="-2" x2="6" y2="14" stroke="#0a0608" stroke-width="3"/>
+    </g>
+  </svg>`,
+
+  jane_eyre: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="jeSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a3a4a"/><stop offset="60%" stop-color="#4a4540"/><stop offset="100%" stop-color="#1a1612"/>
+      </linearGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#jeSky)"/>
+    <!-- mist -->
+    <g fill="#6a6560" opacity=".4">
+      <ellipse cx="60" cy="240" rx="120" ry="20"/>
+      <ellipse cx="240" cy="280" rx="100" ry="18"/>
+      <ellipse cx="150" cy="310" rx="160" ry="14"/>
+    </g>
+    <!-- distant manor -->
+    <g fill="#1a1612">
+      <rect x="100" y="180" width="100" height="80"/>
+      <rect x="80" y="200" width="20" height="60"/>
+      <rect x="200" y="200" width="20" height="60"/>
+      <!-- chimneys -->
+      <rect x="110" y="160" width="8" height="20"/>
+      <rect x="180" y="160" width="8" height="20"/>
+      <!-- roof -->
+      <polygon points="80,200 150,160 220,200"/>
+    </g>
+    <!-- single warm lit window -->
+    <rect x="142" y="210" width="16" height="22" fill="#f4d27a">
+      <animate attributeName="opacity" values=".7;1;.7" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="142" y="210" width="16" height="22" fill="none" stroke="#1a1612" stroke-width="1"/>
+    <line x1="150" y1="210" x2="150" y2="232" stroke="#1a1612"/>
+    <line x1="142" y1="221" x2="158" y2="221" stroke="#1a1612"/>
+    <!-- ground -->
+    <rect y="320" width="300" height="100" fill="#0a0608"/>
+    <!-- gnarled tree -->
+    <g transform="translate(50 320)" fill="none" stroke="#0a0604" stroke-width="3">
+      <path d="M 0 0 L 0 -60"/>
+      <path d="M 0 -30 L -16 -40"/>
+      <path d="M 0 -45 L 14 -56"/>
+      <path d="M -16 -40 L -22 -52"/>
+      <path d="M 14 -56 L 22 -62"/>
+    </g>
+  </svg>`,
+
+  wuthering: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="wuSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a2030"/><stop offset="60%" stop-color="#3a3038"/><stop offset="100%" stop-color="#1a1014"/>
+      </linearGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#wuSky)"/>
+    <!-- storm wind streaks -->
+    <g stroke="#c9c0b0" stroke-width="1" fill="none" opacity=".25">
+      <path d="M 0 80 Q 80 60 160 80 T 300 80"/>
+      <path d="M 0 130 Q 80 110 160 130 T 300 130"/>
+      <path d="M 0 180 Q 80 160 160 180 T 300 180"/>
+    </g>
+    <!-- distant moor -->
+    <path d="M 0 280 Q 75 260 150 280 T 300 270 L 300 420 L 0 420 Z" fill="#3a2818"/>
+    <path d="M 0 320 Q 100 300 200 320 T 300 310 L 300 420 L 0 420 Z" fill="#1a1014"/>
+    <!-- the lone gnarled tree, leaning hard -->
+    <g transform="translate(200 290)" fill="none" stroke="#0a0608" stroke-width="3.5">
+      <path d="M 0 30 L -10 -50"/>
+      <path d="M -10 -50 L -18 -70"/>
+      <path d="M -10 -30 L -25 -38"/>
+      <path d="M -8 -20 L 14 -32"/>
+      <path d="M -14 -56 L -28 -62"/>
+      <path d="M -14 -56 L -2 -68"/>
+      <path d="M -2 -68 L 8 -76"/>
+    </g>
+    <!-- single tear of warm light from a distant window -->
+    <rect x="74" y="270" width="6" height="10" fill="#f4d27a" opacity=".8"/>
+  </svg>`,
+
+  phantom: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="phntBg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a0a14"/><stop offset="60%" stop-color="#4a0a18"/><stop offset="100%" stop-color="#0a0408"/>
+      </linearGradient>
+      <radialGradient id="chand" cx=".5" cy=".5" r=".5">
+        <stop offset="0%" stop-color="#fdebc6"/><stop offset="100%" stop-color="#c9a961" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#phntBg)"/>
+    <!-- velvet curtain edges -->
+    <g fill="#7c1a3a" opacity=".7">
+      <path d="M 0 0 L 60 0 L 50 420 L 0 420 Z"/>
+      <path d="M 240 0 L 300 0 L 300 420 L 250 420 Z"/>
+    </g>
+    <!-- chandelier -->
+    <g transform="translate(150 100)">
+      <line x1="0" y1="-80" x2="0" y2="-12" stroke="#c9a961" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="38" ry="14" fill="url(#chand)" opacity=".7"/>
+      <ellipse cx="0" cy="0" rx="38" ry="14" fill="none" stroke="#c9a961" stroke-width="1.5"/>
+      <!-- candles -->
+      <g fill="#f4d27a">
+        <circle cx="-30" cy="-2" r="3"/><circle cx="-18" cy="-6" r="3"/>
+        <circle cx="-6" cy="-8" r="3"/><circle cx="6" cy="-8" r="3"/>
+        <circle cx="18" cy="-6" r="3"/><circle cx="30" cy="-2" r="3"/>
+      </g>
+      <ellipse cx="0" cy="-2" rx="50" ry="22" fill="#f4d27a" opacity=".22"/>
+    </g>
+    <!-- floating half-mask -->
+    <g transform="translate(150 270)">
+      <path d="M -50 -30 Q -55 25 -10 28 L -10 -38 Q -40 -42 -50 -30 Z" fill="#f4ead0"/>
+      <path d="M -50 -30 Q -55 25 -10 28 L -10 -38 Q -40 -42 -50 -30 Z" fill="none" stroke="#1a0a14" stroke-width="1"/>
+      <ellipse cx="-32" cy="-10" rx="6" ry="4" fill="#1a0a14"/>
+      <!-- a tear streak -->
+      <path d="M -32 -6 L -28 14" stroke="#c98aa3" stroke-width="1" opacity=".7"/>
+    </g>
+  </svg>`,
+
+  princess_mars: `<svg viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="marsSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a1414"/><stop offset="50%" stop-color="#a04a28"/><stop offset="100%" stop-color="#dc8a4a"/>
+      </linearGradient>
+    </defs>
+    <rect width="300" height="420" fill="url(#marsSky)"/>
+    <!-- two moons -->
+    <circle cx="80" cy="80" r="14" fill="#f4d27a" opacity=".9"/>
+    <circle cx="220" cy="60" r="8" fill="#f4d27a" opacity=".7"/>
+    <!-- pyramidal city silhouettes -->
+    <g fill="#1a0a08">
+      <polygon points="0,300 50,220 100,300"/>
+      <polygon points="80,300 130,200 180,300"/>
+      <polygon points="170,300 230,160 290,300"/>
+      <polygon points="260,300 300,240 300,300"/>
+      <rect y="290" width="300" height="50"/>
+    </g>
+    <!-- desert sand -->
+    <rect y="340" width="300" height="80" fill="#a04a28"/>
+    <rect y="370" width="300" height="50" fill="#7a3a1c"/>
+    <!-- two figures (Carter and Dejah Thoris) -->
+    <g transform="translate(150 358)" fill="#0a0408">
+      <ellipse cx="-12" cy="14" rx="6" ry="1.5" opacity=".4"/>
+      <ellipse cx="12" cy="14" rx="6" ry="1.5" opacity=".4"/>
+      <rect x="-15" y="-18" width="5" height="30"/>
+      <circle cx="-12.5" cy="-22" r="3.5"/>
+      <rect x="10" y="-18" width="5" height="30"/>
+      <circle cx="12.5" cy="-22" r="3.5"/>
+      <!-- joined hands -->
+      <line x1="-10" y1="-2" x2="10" y2="-2" stroke="#0a0408" stroke-width="2"/>
+    </g>
+  </svg>`,
+};
+
+/* ────────── Scene SVG (large backdrop in reader) ────────── */
+const SCENE = {
+  bible: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id="bibHalo" cx=".5" cy=".5" r=".7">
+        <stop offset="0%" stop-color="#fff5d6" stop-opacity=".22"/>
+        <stop offset="50%" stop-color="#f4d27a" stop-opacity=".08"/>
+        <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="#0a0604"/>
+    <rect width="1600" height="900" fill="url(#bibHalo)"/>
+    <g opacity=".18" fill="#f4d27a">
+      <polygon points="800,0 720,900 880,900"/>
+      <polygon points="800,0 620,900 980,900" opacity=".5"/>
+      <polygon points="800,0 520,900 1080,900" opacity=".3"/>
+    </g>
+  </svg>`,
+
+  douglass: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="dgDawn" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1f3a5c"/><stop offset="45%" stop-color="#b87a4a"/>
+        <stop offset="70%" stop-color="#e6b58a"/><stop offset="100%" stop-color="#3a2818"/>
+      </linearGradient>
+      <radialGradient id="dgSun" cx=".5" cy=".62" r=".25">
+        <stop offset="0%" stop-color="#fdebc6"/><stop offset="100%" stop-color="#e6b58a" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#dgDawn)"/>
+    <circle cx="800" cy="540" r="380" fill="url(#dgSun)" opacity=".5"/>
+    <circle cx="800" cy="540" r="60" fill="#fff5d6" opacity=".7"/>
+    <rect y="560" width="1600" height="340" fill="#0a1828" opacity=".75"/>
+    <g transform="translate(420 545)" fill="#0a0604">
+      <path d="M -30 0 L 30 0 L 24 10 L -24 10 Z"/>
+      <rect x="-16" y="-50" width="2" height="50"/>
+      <rect x="0" y="-60" width="2" height="60"/>
+      <rect x="16" y="-52" width="2" height="52"/>
+      <path d="M -16 -48 L -2 -48 L -2 -10 L -16 -10 Z" fill="#f0e0c0" opacity=".85"/>
+      <path d="M 1 -58 L 15 -58 L 15 -12 L 1 -12 Z" fill="#f0e0c0" opacity=".85"/>
+      <path d="M 17 -50 L 30 -50 L 30 -10 L 17 -10 Z" fill="#f0e0c0" opacity=".85"/>
+    </g>
+  </svg>`,
+
+  jungle: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="jgSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a2818"/><stop offset="55%" stop-color="#7a4a2a"/><stop offset="100%" stop-color="#1a0f08"/>
+      </linearGradient>
+      <radialGradient id="jgEmber" cx=".5" cy=".6" r=".5">
+        <stop offset="0%" stop-color="#d96d2c" stop-opacity=".6"/><stop offset="100%" stop-color="#5c1d0a" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#jgSky)"/>
+    <g opacity=".55">
+      <ellipse cx="280" cy="280" rx="160" ry="240" fill="#0a0604"><animate attributeName="cy" values="280;240;280" dur="14s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="540" cy="220" rx="200" ry="280" fill="#0a0604"><animate attributeName="cy" values="220;180;220" dur="18s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="900" cy="190" rx="240" ry="320" fill="#0a0604"><animate attributeName="cy" values="190;150;190" dur="22s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="1240" cy="240" rx="200" ry="260" fill="#0a0604"><animate attributeName="cy" values="240;200;240" dur="16s" repeatCount="indefinite"/></ellipse>
+    </g>
+    <ellipse cx="900" cy="640" rx="700" ry="200" fill="url(#jgEmber)"/>
+    <g fill="#050302">
+      <rect x="0" y="600" width="1600" height="300"/>
+      <rect x="380" y="440" width="80" height="180"/>
+      <rect x="540" y="380" width="100" height="240"/>
+      <rect x="720" y="340" width="120" height="280"/>
+      <rect x="920" y="380" width="100" height="240"/>
+      <rect x="1080" y="420" width="90" height="200"/>
+    </g>
+  </svg>`,
+
+  dracula: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="drSky2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#06060e"/><stop offset="60%" stop-color="#1a1428"/><stop offset="100%" stop-color="#0a0608"/>
+      </linearGradient>
+      <radialGradient id="drMoon2" cx=".5" cy=".5" r=".5">
+        <stop offset="0%" stop-color="#fff5d6" stop-opacity=".4"/><stop offset="100%" stop-color="#fff5d6" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#drSky2)"/>
+    <circle cx="1200" cy="220" r="160" fill="url(#drMoon2)"/>
+    <circle cx="1200" cy="220" r="80" fill="#f4ecd0"/>
+    <circle cx="1170" cy="200" r="70" fill="#1a1428" opacity=".3"/>
+    <g fill="#0a0608">
+      <rect x="500" y="500" width="600" height="350"/>
+      <rect x="440" y="540" width="80" height="310"/>
+      <rect x="1080" y="540" width="80" height="310"/>
+      <polygon points="500,500 600,400 700,500"/>
+      <polygon points="700,500 800,380 900,500"/>
+      <polygon points="900,500 1000,400 1100,500"/>
+      <polygon points="440,540 480,490 520,540"/>
+      <polygon points="1080,540 1120,490 1160,540"/>
+      <g fill="#b8362d" opacity=".7">
+        <rect x="560" y="560" width="14" height="28"/>
+        <rect x="620" y="580" width="14" height="28"/>
+        <rect x="780" y="560" width="14" height="28"/>
+        <rect x="900" y="580" width="14" height="28"/>
+        <rect x="1000" y="560" width="14" height="28"/>
+      </g>
+    </g>
+    <g fill="#0a0608">
+      <path d="M 200 280 q 20 -16 40 0 q -20 12 -40 0 z"/>
+      <path d="M 320 220 q 16 -14 32 0 q -16 10 -32 0 z"/>
+      <path d="M 1380 380 q 18 -14 36 0 q -18 10 -36 0 z"/>
+    </g>
+    <ellipse cx="800" cy="900" rx="900" ry="80" fill="#1a1428" opacity=".8"/>
+  </svg>`,
+
+  carmilla: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="cmBg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1c1830"/><stop offset="100%" stop-color="#0a0814"/>
+      </linearGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#cmBg)"/>
+    <!-- left candelabrum -->
+    <g transform="translate(220 720)">
+      <rect x="-6" y="0" width="12" height="120" fill="#e8d8d8"/>
+      <ellipse cx="0" cy="125" rx="40" ry="6" fill="#e8d8d8"/>
+      <path d="M -3 -3 Q 0 -22 3 -3 Z" fill="#f4d27a"/>
+      <circle cx="0" cy="-10" r="22" fill="#f4d27a" opacity=".18"/>
+    </g>
+    <g transform="translate(1380 720)">
+      <rect x="-6" y="0" width="12" height="120" fill="#e8d8d8"/>
+      <ellipse cx="0" cy="125" rx="40" ry="6" fill="#e8d8d8"/>
+      <path d="M -3 -3 Q 0 -22 3 -3 Z" fill="#f4d27a"/>
+      <circle cx="0" cy="-10" r="22" fill="#f4d27a" opacity=".18"/>
+    </g>
+    <!-- moonlight pool -->
+    <ellipse cx="800" cy="700" rx="500" ry="80" fill="#aec3e0" opacity=".09"/>
+    <!-- arched window mid -->
+    <path d="M 700 200 Q 700 100 800 100 Q 900 100 900 200 L 900 500 L 700 500 Z" fill="#1a1430" stroke="#c98aa3" stroke-width="2" opacity=".7"/>
+    <line x1="800" y1="100" x2="800" y2="500" stroke="#c98aa3" stroke-width="1" opacity=".5"/>
+  </svg>`,
+
+  frankenstein: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="frBg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0a0a14"/><stop offset="55%" stop-color="#1c2030"/><stop offset="100%" stop-color="#0a0a12"/>
+      </linearGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#frBg)"/>
+    <!-- lightning -->
+    <path d="M 1100 60 L 1020 240 L 1080 240 L 980 460 L 1050 440 L 920 720" fill="none" stroke="#aee0ff" stroke-width="3" opacity=".85"/>
+    <path d="M 1100 60 L 1020 240 L 1080 240 L 980 460 L 1050 440 L 920 720" fill="none" stroke="#fff" stroke-width="1.5" opacity=".6"/>
+    <!-- clouds -->
+    <ellipse cx="400" cy="220" rx="240" ry="50" fill="#1a1828" opacity=".7"/>
+    <ellipse cx="1200" cy="280" rx="220" ry="48" fill="#1a1828" opacity=".7"/>
+    <!-- alps -->
+    <polygon points="0,600 200,440 400,580 660,400 880,580 1180,380 1440,580 1600,500 1600,900 0,900" fill="#0a0608"/>
+    <g fill="#aee0ff" opacity=".35">
+      <polygon points="630,408 660,400 690,432"/>
+      <polygon points="1150,388 1180,380 1210,412"/>
+    </g>
+  </svg>`,
+
+  jane_eyre: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="jeBg2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a3a4a"/><stop offset="60%" stop-color="#4a4540"/><stop offset="100%" stop-color="#1a1612"/>
+      </linearGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#jeBg2)"/>
+    <g fill="#6a6560" opacity=".4">
+      <ellipse cx="300" cy="500" rx="500" ry="40"/>
+      <ellipse cx="1200" cy="580" rx="500" ry="36"/>
+      <ellipse cx="800" cy="640" rx="800" ry="28"/>
+    </g>
+    <g fill="#1a1612">
+      <rect x="600" y="380" width="400" height="320"/>
+      <rect x="540" y="440" width="60" height="260"/>
+      <rect x="1000" y="440" width="60" height="260"/>
+      <rect x="640" y="340" width="20" height="40"/>
+      <rect x="940" y="340" width="20" height="40"/>
+      <polygon points="540,440 800,340 1060,440"/>
+    </g>
+    <rect x="775" y="480" width="50" height="70" fill="#f4d27a">
+      <animate attributeName="opacity" values=".75;1;.75" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="775" y="480" width="50" height="70" fill="none" stroke="#1a1612"/>
+    <line x1="800" y1="480" x2="800" y2="550" stroke="#1a1612"/>
+    <line x1="775" y1="515" x2="825" y2="515" stroke="#1a1612"/>
+    <rect y="700" width="1600" height="200" fill="#0a0608"/>
+    <g transform="translate(220 700)" fill="none" stroke="#0a0604" stroke-width="5">
+      <path d="M 0 0 L 0 -160"/>
+      <path d="M 0 -80 L -50 -110"/>
+      <path d="M 0 -120 L 40 -150"/>
+      <path d="M -50 -110 L -70 -140"/>
+      <path d="M 40 -150 L 60 -170"/>
+    </g>
+  </svg>`,
+
+  wuthering: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="wuBg2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a2030"/><stop offset="60%" stop-color="#3a3038"/><stop offset="100%" stop-color="#1a1014"/>
+      </linearGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#wuBg2)"/>
+    <g stroke="#c9c0b0" stroke-width="1.4" fill="none" opacity=".25">
+      <path d="M 0 200 Q 400 160 800 200 T 1600 200"/>
+      <path d="M 0 280 Q 400 240 800 280 T 1600 280"/>
+      <path d="M 0 360 Q 400 320 800 360 T 1600 360"/>
+    </g>
+    <path d="M 0 620 Q 400 580 800 620 T 1600 600 L 1600 900 L 0 900 Z" fill="#3a2818"/>
+    <path d="M 0 680 Q 500 650 1000 680 T 1600 670 L 1600 900 L 0 900 Z" fill="#1a1014"/>
+    <g transform="translate(1100 640)" fill="none" stroke="#0a0608" stroke-width="6">
+      <path d="M 0 60 L -16 -110"/>
+      <path d="M -16 -110 L -32 -140"/>
+      <path d="M -16 -60 L -50 -76"/>
+      <path d="M -12 -40 L 24 -56"/>
+      <path d="M -22 -120 L -52 -130"/>
+      <path d="M -2 -132 L 16 -148"/>
+    </g>
+    <rect x="320" y="600" width="10" height="20" fill="#f4d27a" opacity=".8"/>
+  </svg>`,
+
+  phantom: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="phBg2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a0a14"/><stop offset="60%" stop-color="#4a0a18"/><stop offset="100%" stop-color="#0a0408"/>
+      </linearGradient>
+      <radialGradient id="phLight" cx=".5" cy=".5" r=".5">
+        <stop offset="0%" stop-color="#fdebc6"/><stop offset="100%" stop-color="#c9a961" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#phBg2)"/>
+    <g fill="#7c1a3a" opacity=".7">
+      <path d="M 0 0 L 280 0 L 240 900 L 0 900 Z"/>
+      <path d="M 1320 0 L 1600 0 L 1600 900 L 1360 900 Z"/>
+    </g>
+    <g transform="translate(800 240)">
+      <line x1="0" y1="-200" x2="0" y2="-40" stroke="#c9a961" stroke-width="3"/>
+      <ellipse cx="0" cy="0" rx="140" ry="50" fill="url(#phLight)" opacity=".7"/>
+      <ellipse cx="0" cy="0" rx="140" ry="50" fill="none" stroke="#c9a961" stroke-width="2"/>
+      <g fill="#f4d27a">
+        <circle cx="-110" cy="-6" r="6"/><circle cx="-66" cy="-14" r="6"/>
+        <circle cx="-22" cy="-18" r="6"/><circle cx="22" cy="-18" r="6"/>
+        <circle cx="66" cy="-14" r="6"/><circle cx="110" cy="-6" r="6"/>
+      </g>
+      <ellipse cx="0" cy="-8" rx="200" ry="80" fill="#f4d27a" opacity=".18"/>
+    </g>
+  </svg>`,
+
+  princess_mars: `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="mrBg2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a1414"/><stop offset="50%" stop-color="#a04a28"/><stop offset="100%" stop-color="#dc8a4a"/>
+      </linearGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#mrBg2)"/>
+    <circle cx="400" cy="160" r="32" fill="#f4d27a" opacity=".9"/>
+    <circle cx="1200" cy="120" r="20" fill="#f4d27a" opacity=".7"/>
+    <g fill="#1a0a08">
+      <polygon points="0,640 220,420 440,640"/>
+      <polygon points="380,640 600,360 820,640"/>
+      <polygon points="780,640 1060,300 1340,640"/>
+      <polygon points="1240,640 1440,460 1600,640"/>
+      <rect y="620" width="1600" height="100"/>
+    </g>
+    <rect y="700" width="1600" height="100" fill="#a04a28"/>
+    <rect y="760" width="1600" height="140" fill="#7a3a1c"/>
+  </svg>`,
+};
+
+/* ════════ STATE ════════ */
+let currentSlug = null;
+let currentChapter = 0;
+let currentBookIdx = 0;       // only used for bible mode
+let chunkTimer = null;
+let audioEl = null;
+let availableVoices = [];
+let isPlaying = false;
+let currentParaIdx = 0;
+
+/* settings.rate is now a MULTIPLIER on top of each book's preferred base
+   rate (1.0 = "natural for this book"). Range 0.5 – 2.0. */
+const settings = { voiceName: '', audioUrl: '', rate: 1.0 };
+try {
+  const saved = JSON.parse(localStorage.getItem('lumen-voice') || 'null');
+  if (saved) Object.assign(settings, saved);
+  // Migrate: older versions stored absolute rates (0.7–1.1). If the saved
+  // rate is below 1.2, normalize it to the new multiplier scale.
+  if (settings.rate && settings.rate < 1.2) settings.rate = 1.0;
+} catch(e){}
+const SPEED_STEPS = [0.6, 0.75, 0.85, 1.0, 1.15, 1.35, 1.6, 2.0];
+function speedStepIndex() {
+  let best = 3, bestD = Infinity;
+  SPEED_STEPS.forEach((s, i) => {
+    const d = Math.abs(s - (settings.rate || 1.0));
+    if (d < bestD) { bestD = d; best = i; }
+  });
+  return best;
+}
+
+const synth = window.speechSynthesis;
+function loadVoices() {
+  availableVoices = synth ? synth.getVoices() : [];
+  rebuildVoiceSelect();
+}
+if (synth) { loadVoices(); synth.onvoiceschanged = loadVoices; }
+
+/* ════════ HOME PAGE BUILD ════════ */
+function buildHome() {
+  const canon = document.getElementById('canonShelf');
+  const chick = document.getElementById('chickenShelf');
+  canon.innerHTML = ''; chick.innerHTML = '';
+  for (const [slug, b] of Object.entries(BOOKS)) {
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.dataset.slug = slug;
+    c.innerHTML = `
+      <div class="card-art">${CARD_ART[slug] || ''}</div>
+      <div class="card-meta">
+        <div class="author">${escape(b.author)} · ${b.year}</div>
+        <h2>${escape(b.title)}</h2>
+        ${b.blurb ? `<div class="blurb">${escape(b.blurb)}</div>` : ''}
+        <div class="card-cta">${escape(b.cta || 'Open')}</div>
+      </div>`;
+    c.addEventListener('click', () => openBook(slug));
+    (b.shelf === 'canon' ? canon : chick).appendChild(c);
+  }
+}
+function escape(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ════════ STARFIELD + LOADING ════════ */
+(function() {
+  const svg = document.getElementById('starfield');
+  if (!svg) return;
+  const W = window.innerWidth, H = Math.max(window.innerHeight, 1600);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const ns = 'http://www.w3.org/2000/svg';
+  for (let i = 0; i < 130; i++) {
+    const c = document.createElementNS(ns, 'circle');
+    c.setAttribute('cx', Math.random()*W);
+    c.setAttribute('cy', Math.random()*H*.8);
+    c.setAttribute('r', Math.random()*1.4 + .2);
+    c.setAttribute('opacity', (Math.random()*.7+.15).toFixed(2));
+    const a = document.createElementNS(ns,'animate');
+    a.setAttribute('attributeName','opacity');
+    a.setAttribute('values', `${.15};${.9};${.15}`);
+    a.setAttribute('dur', `${(Math.random()*4+3).toFixed(2)}s`);
+    a.setAttribute('repeatCount','indefinite');
+    c.appendChild(a);
+    svg.appendChild(c);
+  }
+})();
+
+/* ════════ LAZY DATA LOADING ════════ */
+const loaded = new Set();
+function loadDataFile(book) {
+  return new Promise((resolve, reject) => {
+    if (window[book.dataKey]) { loaded.add(book.dataKey); return resolve(); }
+    const s = document.createElement('script');
+    s.src = book.dataFile;
+    s.onload = () => {
+      if (window[book.dataKey]) { loaded.add(book.dataKey); resolve(); }
+      else reject(new Error('Data variable ' + book.dataKey + ' not set after load'));
+    };
+    s.onerror = () => reject(new Error('Failed to load ' + book.dataFile));
+    document.head.appendChild(s);
+  });
+}
+
+/* ════════ OPEN BOOK ════════ */
+async function openBook(slug) {
+  const book = BOOKS[slug];
+  if (!book) return;
+  stopNarration();
+  currentSlug = slug; currentChapter = 0; currentBookIdx = 0; currentParaIdx = 0;
+
+  document.getElementById('readerTitle').textContent = book.fullTitle || book.title;
+  document.getElementById('stage').innerHTML = SCENE[slug] || '';
+  document.getElementById('reader').dataset.mode = book.mode;
+  document.getElementById('textCol').innerHTML =
+    `<div class="text-chapter-title">Loading…</div>`;
+
+  // Show the reader view immediately so user sees the backdrop
+  document.getElementById('home').classList.remove('active');
+  document.getElementById('reader').classList.add('active');
+
+  try {
+    await loadDataFile(book);
+  } catch (err) {
+    document.getElementById('textCol').innerHTML =
+      `<div class="text-chapter-title">Couldn't Load</div>
+       <div class="text-body"><p>${escape(err.message)}. Make sure the <code>texts/</code> folder sits next to lumen.html.</p></div>`;
+    return;
+  }
+  buildSelectors(slug);
+  renderChapter(slug);
+}
+
+function getData(slug) {
+  const book = BOOKS[slug];
+  return window[book.dataKey];
+}
+
+/* ════════ SELECTOR BUILDERS ════════ */
+function buildSelectors(slug) {
+  const book = BOOKS[slug];
+  const data = getData(slug);
+  const bookSel = document.getElementById('bookSelect');
+  const chSel = document.getElementById('chapterSelect');
+  if (book.mode === 'bible') {
+    bookSel.style.display = '';
+    bookSel.innerHTML = '';
+    data.books.forEach((b, i) => {
+      const o = document.createElement('option');
+      o.value = i; o.textContent = b.name;
+      bookSel.appendChild(o);
+    });
+    bookSel.value = currentBookIdx;
+    bookSel.onchange = () => {
+      currentBookIdx = parseInt(bookSel.value, 10);
+      currentChapter = 0;
+      buildChapterSelect();
+      renderChapter(slug);
+    };
+    buildChapterSelect();
+  } else {
+    bookSel.style.display = 'none';
+    chSel.innerHTML = '';
+    data.chapters.forEach((c, i) => {
+      const o = document.createElement('option');
+      o.value = i; o.textContent = c.title;
+      chSel.appendChild(o);
+    });
+    chSel.value = currentChapter;
+    chSel.onchange = () => { currentChapter = parseInt(chSel.value, 10); renderChapter(slug); };
+  }
+}
+function buildChapterSelect() {
+  const data = getData(currentSlug);
+  const chSel = document.getElementById('chapterSelect');
+  chSel.innerHTML = '';
+  data.books[currentBookIdx].chapters.forEach((_, i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = `Chapter ${i + 1}`;
+    chSel.appendChild(o);
+  });
+  chSel.value = currentChapter;
+  chSel.onchange = () => { currentChapter = parseInt(chSel.value, 10); renderChapter(currentSlug); };
+}
+
+/* ════════ RENDER ════════ */
+function renderChapter(slug) {
+  const book = BOOKS[slug];
+  const data = getData(slug);
+  const root = document.getElementById('textCol');
+  root.innerHTML = '';
+  let chTitle, paras;
+  if (book.mode === 'bible') {
+    const b = data.books[currentBookIdx];
+    chTitle = `${b.name} · Chapter ${currentChapter + 1}`;
+    paras = b.chapters[currentChapter] || [];
+  } else {
+    const c = data.chapters[currentChapter];
+    chTitle = `${book.title} · ${c.title}`;
+    paras = c.paragraphs;
+  }
+  const t = document.createElement('div'); t.className = 'text-chapter-title'; t.textContent = chTitle;
+  root.appendChild(t);
+  const body = document.createElement('div'); body.className = 'text-body';
+  paras.forEach((para, i) => {
+    const p = document.createElement('p');
+    p.dataset.idx = i;
+    const isFirst = i === 0;
+    if (book.mode === 'bible') {
+      if (isFirst) {
+        p.innerHTML = `<span class="verse-num">${i+1}</span><span class="drop">${para.charAt(0)}</span>${escape(para.slice(1))}`;
+      } else {
+        p.innerHTML = `<span class="verse-num">${i+1}</span>${escape(para)}`;
+      }
+    } else {
+      if (isFirst && para.length > 1) {
+        p.innerHTML = `<span class="drop">${escape(para.charAt(0))}</span>${escape(para.slice(1))}`;
+      } else {
+        p.textContent = para;
+      }
+    }
+    p.addEventListener('click', () => speakFrom(i));
+    body.appendChild(p);
+  });
+  root.appendChild(body);
+  root.scrollTop = 0;
+  currentParaIdx = 0;
+}
+
+/* ════════ STEP CHAPTERS ════════ */
+function step(delta) {
+  const book = BOOKS[currentSlug];
+  const data = getData(currentSlug);
+  if (book.mode === 'bible') {
+    let bi = currentBookIdx, ch = currentChapter + delta;
+    if (ch < 0) { bi -= 1; if (bi < 0) bi = data.books.length - 1; ch = data.books[bi].chapters.length - 1; }
+    else if (ch >= data.books[bi].chapters.length) { bi += 1; if (bi >= data.books.length) bi = 0; ch = 0; }
+    currentBookIdx = bi; currentChapter = ch;
+    document.getElementById('bookSelect').value = bi;
+    buildChapterSelect();
+  } else {
+    let ch = currentChapter + delta;
+    if (ch < 0) ch = data.chapters.length - 1;
+    if (ch >= data.chapters.length) ch = 0;
+    currentChapter = ch;
+    document.getElementById('chapterSelect').value = ch;
+  }
+  renderChapter(currentSlug);
+}
+
+/* ════════ NARRATION ════════ */
+const ROMAN_RE_VALID = /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
+function romanToInt(s) {
+  const v = { I:1, V:5, X:10, L:50, C:100, D:500, M:1000 };
+  let n = 0, prev = 0;
+  for (let i = s.length - 1; i >= 0; i--) {
+    const x = v[s[i].toUpperCase()] || 0;
+    n += x >= prev ? x : -x; prev = x;
+  }
+  return n;
+}
+const TIER_A = '(Chapter|Volume|Book|Part|Article|Section|Psalm|Canto|Stanza|Verse|Act|Scene|Appendix|Footnote|Vol\\.|Ch\\.|Letter)';
+const TIER_B = '(Henry|Charles|George|Edward|Louis|James|William|Pius|Leo|Paul|Richard|Napoleon|Frederick|Elizabeth|Mary|Philip|Ferdinand|Otto|Pope|King|Queen|Czar|Tsar|Ramses)';
+const reTierA = new RegExp('\\b' + TIER_A + '\\s+([MDCLXVI]+)\\b', 'g');
+const reTierB = new RegExp('\\b' + TIER_B + '\\s+([MDCLXVI]{2,})\\b', 'g');
+const WORD_SAFE_2 = new Set(['II','III','IV','VI','VII','VIII','IX','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI','XXII','XXIII','XXIV','XXV','XXX','XL','LX','XC']);
+function arabicizeRomans(text) {
+  text = text.replace(reTierA, (m, l, r) => ROMAN_RE_VALID.test(r) ? `${l} ${romanToInt(r)}` : m);
+  text = text.replace(reTierB, (m, l, r) => ROMAN_RE_VALID.test(r) ? `${l} ${romanToInt(r)}` : m);
+  text = text.replace(/\b[MDCLXVI]{3,}\b/g, m => ROMAN_RE_VALID.test(m) ? String(romanToInt(m)) : m);
+  text = text.replace(/\b([MDCLXVI]{2})\b/g, m => (WORD_SAFE_2.has(m) && ROMAN_RE_VALID.test(m)) ? String(romanToInt(m)) : m);
+  return text;
+}
+
+/* Returns [{ text, pause }] where pause is ms to wait AFTER speaking the
+   segment. Different terminators get different rests — questions earn the
+   longest hang, periods a clean stop, semicolons/colons a half-pause.
+   Em-dashes inside the segment add a small extra breath. */
+function chunkText(text) {
+  const chunks = [];
+  // Capture body + terminator (including any trailing close-quote/paren)
+  const re = /([^.!?;:]+)([.!?;:]+["”'’)\]]*)\s*/g;
+  let m, last = 0;
+  while ((m = re.exec(text)) !== null) {
+    const body = m[1];
+    const punc = m[2] || '';
+    const seg = (body + punc).trim();
+    if (!seg) continue;
+    let pause = 360;
+    if (/\?/.test(punc)) pause = 500;
+    else if (/!/.test(punc)) pause = 460;
+    else if (/\./.test(punc)) pause = 400;
+    else if (/;/.test(punc)) pause = 260;
+    else if (/:/.test(punc)) pause = 240;
+    // dramatic em-dash inside segment → extra breath after
+    if (/[—–]|--/.test(body)) pause += 80;
+    chunks.push({ text: seg, pause });
+    last = re.lastIndex;
+  }
+  const tail = text.slice(last).trim();
+  if (tail) chunks.push({ text: tail, pause: 320 });
+  return chunks.length ? chunks : [{ text, pause: 320 }];
+}
+
+function voiceScore(v, pref) {
+  const n = (v.name || '').toLowerCase();
+  const lang = (v.lang || '').toLowerCase();
+  let s = 0;
+  // Quality tier
+  if (/premium/.test(n)) s += 50;
+  if (/enhanced/.test(n)) s += 42;
+  if (/neural/.test(n)) s += 38;
+  if (/natural/.test(n)) s += 32;
+  if (/online/.test(n)) s += 12;
+  if (v.localService === false) s += 4;
+  // Junk legacy voices
+  if (/novelty|whisper|cellos|bahh|deranged|bubbles|jester|pipe|trinoids|zarvox|good news|bad news|bells|albert|hysterical|boing|grandma|rocko|flo|sandy|junior|kathy|princess|ralph|fred|bruce|vicki/.test(n)) s -= 200;
+  // Generic English bonus
+  if (/^en/.test(lang)) s += 6;
+  // Per-book preferences
+  if (pref) {
+    // Exact lang match (en-GB vs en-US)
+    if (pref.lang && lang.toLowerCase() === pref.lang.toLowerCase()) s += 25;
+    else if (pref.lang && lang.slice(0,2) === pref.lang.slice(0,2)) s += 8;
+    // Preferred names
+    if (Array.isArray(pref.preferred)) {
+      for (const name of pref.preferred) {
+        if (n.includes(name.toLowerCase())) { s += 30; break; }
+      }
+    }
+    // Gender match
+    if (pref.gender) {
+      const g = detectGender(v);
+      if (g === pref.gender) s += 18;
+      else if (g && g !== pref.gender) s -= 10;
+    }
+  }
+  return s;
+}
+
+function pickVoice(slug) {
+  if (!availableVoices.length) return null;
+  // user override always wins
+  if (settings.voiceName) {
+    const c = availableVoices.find(v => v.name === settings.voiceName);
+    if (c) return c;
+  }
+  const pref = (slug && VOICE_PREFS[slug]) || null;
+  const pool = availableVoices.filter(v => /^en/i.test(v.lang || ''));
+  return [...(pool.length ? pool : availableVoices)]
+    .sort((a, b) => voiceScore(b, pref) - voiceScore(a, pref))[0];
+}
+function rebuildVoiceSelect() {
+  const sel = document.getElementById('voiceSelect');
+  if (!sel) return;
+  sel.innerHTML = '';
+  const groups = { Premium: [], English: [], Other: [] };
+  for (const v of availableVoices) {
+    if (/premium|enhanced|neural|natural/i.test(v.name)) groups.Premium.push(v);
+    else if (/^en/i.test(v.lang)) groups.English.push(v);
+    else groups.Other.push(v);
+  }
+  const auto = document.createElement('option');
+  auto.value = ''; auto.textContent = '(Auto — best available)';
+  sel.appendChild(auto);
+  for (const [label, list] of Object.entries(groups)) {
+    if (!list.length) continue;
+    const og = document.createElement('optgroup'); og.label = label;
+    list.sort((a,b) => voiceScore(b) - voiceScore(a));
+    for (const v of list) {
+      const opt = document.createElement('option');
+      opt.value = v.name; opt.textContent = `${v.name} — ${v.lang}`;
+      og.appendChild(opt);
+    }
+    sel.appendChild(og);
+  }
+  sel.value = settings.voiceName || '';
+}
+
+function getParagraphs() {
+  const book = BOOKS[currentSlug];
+  const data = getData(currentSlug);
+  if (book.mode === 'bible') return data.books[currentBookIdx].chapters[currentChapter] || [];
+  return data.chapters[currentChapter].paragraphs;
+}
+
+function setActiveParagraph(idx) {
+  const root = document.getElementById('textCol');
+  root.querySelectorAll('.text-body p').forEach(p => p.classList.toggle('active', parseInt(p.dataset.idx, 10) === idx));
+  const active = root.querySelector('.text-body p.active');
+  if (active) {
+    const rRect = root.getBoundingClientRect();
+    const aRect = active.getBoundingClientRect();
+    const offset = (aRect.top - rRect.top) - (rRect.height/2 - aRect.height/2);
+    root.scrollBy({ top: offset, behavior: 'smooth' });
+  }
+}
+
+function speakFrom(idx) {
+  stopNarration();
+  currentParaIdx = idx;
+  playCurrent();
+}
+
+function playCurrent() {
+  if (!currentSlug) return;
+  const paras = getParagraphs();
+  if (currentParaIdx < 0 || currentParaIdx >= paras.length) {
+    stopNarration();
+    return;
+  }
+  setActiveParagraph(currentParaIdx);
+  const text = paras[currentParaIdx];
+
+  const advance = () => {
+    currentParaIdx += 1;
+    if (currentParaIdx >= paras.length) {
+      step(1);            // roll to next chapter
+      currentParaIdx = 0;
+    }
+    chunkTimer = setTimeout(playCurrent, 350);
+  };
+
+  if (settings.audioUrl) {
+    if (!audioEl) audioEl = new Audio();
+    audioEl.src = settings.audioUrl;
+    audioEl.onended = advance;
+    audioEl.onerror = () => { settings.audioUrl = ''; playCurrent(); };
+    audioEl.play().catch(()=>{});
+    setPlayState(true);
+    return;
+  }
+
+  if (!synth) return;
+  synth.cancel();
+  isPlaying = true;
+  setPlayState(true);
+  speakSentences(chunkText(arabicizeRomans(text)), advance);
+}
+
+/* Each segment carries its own pause hint. We honor it AFTER the synth
+   reports onend, then move on. The user's settings.rate is now a
+   multiplier on top of the book's preferred base rate. */
+function speakSentences(segments, onDone) {
+  let i = 0;
+  const slug = currentSlug;
+  const pref = VOICE_PREFS[slug] || {};
+  const next = () => {
+    if (!isPlaying || currentSlug !== slug) return;
+    if (i >= segments.length) { onDone && onDone(); return; }
+    const { text, pause } = segments[i++];
+    const u = new SpeechSynthesisUtterance(text);
+    const v = pickVoice(slug);
+    if (v) u.voice = v;
+    const baseRate = pref.rate || 0.85;
+    const mul = Number(settings.rate) || 1.0;
+    u.rate = Math.max(0.3, Math.min(3.0, baseRate * mul));
+    u.pitch = (pref.pitch != null) ? pref.pitch : 1.0;
+    u.volume = 1;
+    u.onend = () => {
+      const gap = pause * (pref.sentenceGapBoost || 1);
+      chunkTimer = setTimeout(next, gap);
+    };
+    synth.speak(u);
+  };
+  next();
+}
+
+function setPlayState(playing) {
+  isPlaying = playing;
+  const btn = document.getElementById('playBtn');
+  btn.dataset.state = playing ? 'playing' : 'idle';
+  btn.textContent = playing ? 'Pause' : 'Begin Narration';
+}
+
+function stopNarration() {
+  if (synth) synth.cancel();
+  if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; }
+  if (chunkTimer) { clearTimeout(chunkTimer); chunkTimer = null; }
+  isPlaying = false;
+  setPlayState(false);
+}
+
+document.getElementById('playBtn').addEventListener('click', () => {
+  if (isPlaying) { stopNarration(); return; }
+  speakFrom(currentParaIdx || 0);
+});
+document.getElementById('prevBtn').addEventListener('click', () => step(-1));
+document.getElementById('nextBtn').addEventListener('click', () => step(1));
+
+/* ════════ inline speed stepper ════════ */
+function updateSpeedDisplay() {
+  const el = document.getElementById('speedDisplay');
+  if (el) el.textContent = (settings.rate || 1.0).toFixed(2) + '×';
+  const rs = document.getElementById('rateSelect');
+  if (rs) {
+    // Sync the dropdown if a matching option exists; otherwise leave the closest
+    const target = String(settings.rate);
+    const opt = Array.from(rs.options).find(o => Math.abs(parseFloat(o.value) - (settings.rate || 1)) < 0.01);
+    if (opt) rs.value = opt.value;
+  }
+}
+function bumpSpeed(delta) {
+  let idx = speedStepIndex();
+  idx = Math.max(0, Math.min(SPEED_STEPS.length - 1, idx + delta));
+  settings.rate = SPEED_STEPS[idx];
+  try { localStorage.setItem('lumen-voice', JSON.stringify(settings)); } catch(e){}
+  updateSpeedDisplay();
+  // If currently narrating, the change takes effect on the next sentence.
+}
+document.getElementById('speedDown').addEventListener('click', () => bumpSpeed(-1));
+document.getElementById('speedUp').addEventListener('click',   () => bumpSpeed(+1));
+updateSpeedDisplay();
+
+/* ════════ voice preview ════════ */
+const PREVIEW_LINE = 'In the beginning, the word — and then, the voice.';
+document.getElementById('voiceTest').addEventListener('click', (e) => {
+  if (!synth) return;
+  synth.cancel();
+  const chosenName = document.getElementById('voiceSelect').value;
+  const voice = chosenName
+    ? availableVoices.find(v => v.name === chosenName)
+    : pickVoice(currentSlug);
+  if (!voice) return;
+  const u = new SpeechSynthesisUtterance(PREVIEW_LINE);
+  u.voice = voice;
+  u.rate = 0.92; u.pitch = 1.0; u.volume = 1;
+  synth.speak(u);
+});
+
+/* ════════ NAVIGATION ════════ */
+document.querySelectorAll('[data-back]').forEach(el => {
+  el.addEventListener('click', () => {
+    stopNarration();
+    document.getElementById('reader').classList.remove('active');
+    document.getElementById('home').classList.add('active');
+  });
+});
+
+/* ════════ VOICE PANEL ════════ */
+const voicePanel = document.getElementById('voicePanel');
+document.querySelectorAll('[data-voice-open]').forEach(b => {
+  b.addEventListener('click', () => {
+    rebuildVoiceSelect();
+    document.getElementById('audioUrl').value = settings.audioUrl || '';
+    document.getElementById('rateSelect').value = String(settings.rate);
+    voicePanel.classList.add('open');
+  });
+});
+document.querySelectorAll('[data-voice-close]').forEach(b => {
+  b.addEventListener('click', () => voicePanel.classList.remove('open'));
+});
+voicePanel.addEventListener('click', (e) => {
+  if (e.target === voicePanel) voicePanel.classList.remove('open');
+});
+document.getElementById('voiceSave').addEventListener('click', () => {
+  settings.voiceName = document.getElementById('voiceSelect').value || '';
+  settings.audioUrl  = document.getElementById('audioUrl').value.trim();
+  settings.rate      = parseFloat(document.getElementById('rateSelect').value) || 1.0;
+  try { localStorage.setItem('lumen-voice', JSON.stringify(settings)); } catch(e){}
+  voicePanel.classList.remove('open');
+  updateSpeedDisplay();
+  if (currentSlug && isPlaying) speakFrom(currentParaIdx);
+});
+
+window.addEventListener('beforeunload', stopNarration);
+
+/* ════════ BOOT ════════ */
+buildHome();
+document.getElementById('home').classList.add('active');
+document.getElementById('loading').classList.add('gone');
+</script>
+</body>
+</html>
